@@ -17,7 +17,6 @@ function App() {
     const response = await fetch("http://127.0.0.1:5000/contacts");
     const data = await response.json();
     setContacts(data.contacts);
-    console.log(data.contacts);
   };
 
   const closeModal = () => {
@@ -41,18 +40,19 @@ function App() {
   }
 
   return (
-    <>
-      <ContactList contacts={contacts} updateContact={openEditModal} updateCallback={onUpdate}/>
-      <button onClick={openCreateModal}>Create New Contact</button>
-      { isModalOpen && <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>&times;</span>
-            <ContactForm existingContact={currentContact} updateCallback={onUpdate}/>
+    <div className="bg-[url(../public/background.jpg)] bg-cover h-screen content-center justify-center flex items-center">
+      <div className="w-[60%] h-4/5 p-4 rounded-xl border-2 items-center justify-center  gap-3 relative backdrop-blur-md bg-white/25 flex flex-col shadow-xl">
+        <ContactList contacts={contacts} updateContact={openEditModal} updateCallback={onUpdate} />
+        <button onClick={openCreateModal}>Create New Contact</button>
+        {isModalOpen && <div className="modal">
+          <div className="modal-content rounded-xl">
+            <span className="close text-red-500" onClick={closeModal}>&times;</span>
+            <ContactForm existingContact={currentContact} updateCallback={onUpdate} />
           </div>
         </div>
-      }
-      
-    </>
+        }
+      </div>
+    </div>
   );
 }
 

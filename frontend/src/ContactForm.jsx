@@ -37,7 +37,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="flex flex-col gap-2 ">
       <div>
         <label htmlFor="firstName">First Name:</label>
         <input
@@ -45,6 +45,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
           id="firstName"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          className="border-2 border-gray-500 rounded-md ml-2 p-1"
         />
       </div>
 
@@ -55,6 +56,7 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
           id="lastName"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          className="border-2 border-gray-500 rounded-md ml-2 p-1"
         />
       </div>
 
@@ -65,10 +67,11 @@ const ContactForm = ({ existingContact = {}, updateCallback }) => {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="border-2 border-gray-500 rounded-md ml-2 p-1"
         />
       </div>
 
-      <button type="submit">{updating ? "Update" : "Create"}</button>
+      <button class="confirm-button" type="submit">{updating ? "Update" : "Create"}</button>
     </form>
   );
 };
