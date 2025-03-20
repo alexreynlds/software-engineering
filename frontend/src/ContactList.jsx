@@ -1,4 +1,5 @@
 import React from "react";
+import "./output.css";
 
 const ContactList = ({ contacts, updateContact, updateCallback }) => {
   const onDelete = async (id) => {
@@ -25,7 +26,7 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
 
   return (
     <div>
-      <h2>Contacts</h2>
+      <h2 className="font-bold text-2xl">Contacts</h2>
       <table>
         <thead>
           <tr>
