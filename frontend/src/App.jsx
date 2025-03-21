@@ -41,7 +41,7 @@ function App() {
 
   return (
     <div className="bg-[url(../public/background.jpg)] bg-cover h-screen content-center justify-center flex items-center">
-      <div className="w-[60%] h-4/5 p-4 rounded-xl border-2 items-center justify-center  gap-3 relative backdrop-blur-md bg-white/25 flex flex-col shadow-xl">
+      <div className="w-[60%] h-4/5 p-4 rounded-xl border-2 items-center justify-center gap-3 backdrop-blur-md bg-white/25 flex flex-col shadow-xl">
         <ContactList contacts={contacts} updateContact={openEditModal} updateCallback={onUpdate} />
         <button onClick={openCreateModal}>Create New Contact</button>
         {isModalOpen && <div className="modal">

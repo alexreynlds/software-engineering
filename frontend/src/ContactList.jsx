@@ -39,7 +39,7 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
   });
 
   return (
-    <div className="w-4/5 h-4/5 border-2 p-4 rounded-xl">
+    <div className="w-4/5 h-full border-2 p-4 rounded-xl">
       <h2 className="font-bold text-2xl underline mb-4 text-center">Contacts</h2>
       <input
         type="text"
@@ -48,29 +48,31 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="p-2 border rounded w-full mb-4"
       />
-      <table className="table-auto w-full text-left">
-        <thead className="border-b-2">
-          <tr className="">
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredContacts.map((contact) => (
-            <tr key={contact.id} className="border-b-1 ">
-              <td>{contact.firstName}</td>
-              <td>{contact.lastName}</td>
-              <td>{contact.email}</td>
-              <td className="flex justify-between items-center">
-                <button onClick={() => updateContact(contact)} className="neutral-button">Update</button>
-                <button onClick={() => onDelete(contact.id)} className="delete-button">&times;</button>
-              </td>
+      <div className="overflow-y-auto max-h-[500px]">
+        <table className="table-auto w-full text-left">
+          <thead className="border-b-2 bg-white sticky top-0">
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredContacts.map((contact) => (
+              <tr key={contact.id} className="border-b">
+                <td>{contact.firstName}</td>
+                <td>{contact.lastName}</td>
+                <td>{contact.email}</td>
+                <td className="flex justify-between items-center">
+                  <button onClick={() => updateContact(contact)} className="neutral-button">Update</button>
+                  <button onClick={() => onDelete(contact.id)} className="delete-button">&times;</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
