@@ -41,12 +41,12 @@ function App() {
 
   return (
     <div className="bg-[url(../public/background.jpg)] bg-cover h-screen content-center justify-center flex items-center">
-      <div className="w-[60%] h-4/5 p-4 rounded-xl border-2 items-center justify-center gap-3 backdrop-blur-md bg-white/25 flex flex-col shadow-xl">
+      <div className="w-[60%] h-4/5 p-4 rounded-xl border-2 border-white/25 items-center justify-center gap-3 backdrop-blur-md bg-white/25 flex flex-col shadow-xl">
         <ContactList contacts={contacts} updateContact={openEditModal} updateCallback={onUpdate} />
         <button onClick={openCreateModal}>Create New Contact</button>
         {isModalOpen && <div className="modal">
-          <div className="modal-content rounded-xl">
-            <span className="close text-red-500" onClick={closeModal}>&times;</span>
+          <div className="modal-content rounded-xl relative">
+            <button onClick={closeModal} className="delete-button float-right absolute right-0 top-0">&times;</button>
             <ContactForm existingContact={currentContact} updateCallback={onUpdate} />
           </div>
         </div>

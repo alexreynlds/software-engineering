@@ -20,9 +20,12 @@
 .close {
   color: red;
   float: right;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 40px;
+  height: 30px;
+  width: 30px;
   transition: 0.3s;
+  justify-content: center;
+  align-items:center;
 }
 
 .close:hover {

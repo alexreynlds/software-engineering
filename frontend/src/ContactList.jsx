@@ -39,7 +39,7 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
   });
 
   return (
-    <div className="w-4/5 h-full border-2 p-4 rounded-xl">
+    <div className="w-4/5 h-full border-2 border-white/25 p-4 rounded-xl">
       <h2 className="font-bold text-2xl underline mb-4 text-center">Contacts</h2>
       <input
         type="text"
@@ -50,7 +50,7 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
       />
       <div className="overflow-y-auto max-h-[500px]">
         <table className="table-auto w-full text-left">
-          <thead className="border-b-2 bg-white sticky top-0">
+          <thead className="border-b-2 sticky top-0">
             <tr>
               <th>First Name</th>
               <th>Last Name</th>
@@ -70,6 +70,11 @@ const ContactList = ({ contacts, updateContact, updateCallback }) => {
                 </td>
               </tr>
             ))}
+            {filteredContacts.length === 0 && (
+              <tr>
+                <td colSpan="4" className="text-center">No contacts found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

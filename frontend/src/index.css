@@ -15,6 +15,11 @@
   width: 30px;
   color: red;
   transition: 0.3s;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  align-content: center;
 }
 
 .delete-button:hover {
@@ -25,14 +30,13 @@
 }
 
 .confirm-button {
-  background-color: lightgreen;
+  background-color: #31e810;
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
   transition: 0.3s;
-  width: 50%;
 }
 
 .confirm-button:hover{
-  background-color: green;
+  background-color: darkgreen;
 }
