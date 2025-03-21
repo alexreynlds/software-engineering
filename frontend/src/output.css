@@ -6,6 +6,7 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-500: oklch(0.637 0.237 25.331);
     --color-gray-500: oklch(0.551 0.027 264.364);
     --color-black: #000;
     --color-white: #fff;
@@ -219,6 +220,9 @@
   .table-auto {
     table-layout: auto;
   }
+  .cursor-pointer {
+    cursor: pointer;
+  }
   .flex-col {
     flex-direction: column;
   }
@@ -313,6 +317,12 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
+  .text-black {
+    color: var(--color-black);
+  }
+  .text-red-500 {
+    color: var(--color-red-500);
+  }
   .underline {
     text-decoration-line: underline;
   }
@@ -344,6 +354,13 @@
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .hover\:text-gray-500 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-gray-500);
+      }
+    }
   }
 }
 .neutral-button {
