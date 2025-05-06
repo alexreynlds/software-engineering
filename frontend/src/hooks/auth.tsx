@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react';
+import { toast } from 'sonner';
 
 // This is the context for authentication
 const AuthContext = createContext({
@@ -64,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       method: 'POST',
       credentials: 'include',
     });
+    toast.success('Logged out successfully');
     setUser(null);
   };
 

@@ -9,6 +9,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
+app.secret_key =  "super-secret-key"
 JWT_SECRET = "super-duper-secret-key"
 JWT_EXP_DELTA_SECONDS = 30 * 24 * 3600  # Currently 30 days
 bcrypt = Bcrypt(app)

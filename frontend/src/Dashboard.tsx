@@ -1,5 +1,6 @@
 import MainLayout from './components/layouts/MainLayout';
 import ImageSearch from './components/ImageSearch';
+import FavouritesPage from './components/Favourites';
 import { useState } from 'react';
 import { Button } from './components/ui/button';
 
@@ -36,7 +37,7 @@ function Dashboard() {
       {/* Page one is image search */}
       {currentPage === 1 && <ImageSearch />}
       {/* Page two is video search */}
-      {/* {currentPage === 2 && <FavouritesPage />} */}
+      {currentPage === 2 && <FavouritesPage />}
     </MainLayout>
   );
 }
