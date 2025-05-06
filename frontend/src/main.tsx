@@ -6,6 +6,7 @@ import './index.css';
 import LoginPage from './LoginPage';
 import Dashboard from './Dashboard';
 import { AuthProvider } from './hooks/auth';
+import ProtectedRoute from './components/ProtectedRoute';
 
 ReactDom.createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,7 +14,14 @@ ReactDom.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         <Toaster />
       </BrowserRouter>
