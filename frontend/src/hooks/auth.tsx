@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchUser();
   }, []);
-
+  //
   // Function to sign in the user using an email and password
   const signIn = async (email, password) => {
     const res = await fetch('http://localhost:5050/api/login', {

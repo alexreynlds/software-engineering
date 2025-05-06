@@ -8,7 +8,7 @@ function Dashboard() {
 
   const handleLogout = async () => {
     await signOut();
-    window.location.href = '/';
+    navigate('/');
   };
 
   return (
