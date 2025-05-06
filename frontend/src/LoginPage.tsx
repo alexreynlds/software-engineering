@@ -3,12 +3,13 @@ import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
 import { useState } from 'react';
-import useAuth from './hook/Auth';
+import useAuth from './hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   // Variables to store the login info typed into the inputs
   const [loginInfo, setLoginInfo] = useState({
@@ -28,8 +29,14 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    toast.success('Login successful!');
-    navigate('/dashboard');
+    const { email, password } = loginInfo;
+
+    try {
+      await signIn(email, password);
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error('Login failed: ' + error.message);
+    }
   };
 
   return (

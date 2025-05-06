@@ -5,15 +5,18 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import './index.css';
 import LoginPage from './LoginPage';
 import Dashboard from './Dashboard';
+import { AuthProvider } from './hooks/auth';
 
 ReactDom.createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-      <Toaster/>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+        <Toaster />
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );
