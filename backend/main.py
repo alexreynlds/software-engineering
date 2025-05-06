@@ -2,17 +2,15 @@ import datetime
 import sqlite3
 
 import jwt
-from flask import Flask
-from flask_cors import CORS
-from flask import jsonify, request, session
+from flask import Flask, jsonify, request, session
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 JWT_SECRET = "super-duper-secret-key"
-JWT_EXP_DELTA_SECONDS = 30 * 24 * 3600  # 7 days
+JWT_EXP_DELTA_SECONDS = 30 * 24 * 3600  # Currently 30 days
 bcrypt = Bcrypt(app)
-
 
 
 # Initialize a connection to the db
@@ -22,6 +20,7 @@ def get_db():
     return conn
 
 
+# Create a JWT token for the user
 def create_token(user_id):
     payload = {
         "user_id": user_id,
@@ -31,6 +30,7 @@ def create_token(user_id):
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
 
+# Verify a provided JWT token
 def verify_token(token):
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
@@ -39,12 +39,24 @@ def verify_token(token):
         return None
 
 
+# Function to check if the user is authenticated
+def check_authentication():
+    token = request.cookies.get("token")
+    if not token:
+        return None, jsonify({"error": "No token"}), 401
+
+    user_id = verify_token(token)
+    if not user_id:
+        return None, jsonify({"error": "Invalid or expired token"}), 401
+    return user_id, None, None
+
+
 # Initialize the database and create tables if they dont exist
 @app.before_first_request
 def init_db():
     db = get_db()
 
-    # Create user_settings table
+    # Create user table
     db.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,8 +99,6 @@ def init_db():
     """)
     db.commit()
 
-    # Create a register endpoint
-
 
 # Allowing the user to register with email and password
 @app.route("/api/register", methods=["POST"])
@@ -105,7 +115,6 @@ def register():
         )
         user_id = cursor.lastrowid
 
-        # Create default settings row
         cursor.execute("INSERT INTO user_settings (user_id) VALUES (?)", (user_id,))
         db.commit()
 
@@ -114,16 +123,12 @@ def register():
         return jsonify({"error": "Email already exists"}), 409
 
 
+# Allowing the user to delete their account
 @app.route("/api/register", methods=["DELETE"])
 def delete_user():
-    auth_header = request.headers.get("Authorization", None)
-    if not auth_header:
-        return jsonify({"error": "No token"}), 401
-
-    token = auth_header.split(" ")[1]
-    user_id = verify_token(token)
-    if not user_id:
-        return jsonify({"error": "Invalid or expired token"}), 401
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
 
     db = get_db()
     db.execute("DELETE FROM users WHERE id = ?", (user_id,))
@@ -149,32 +154,42 @@ def login():
 
     if user and bcrypt.check_password_hash(user["password"], password):
         token = create_token(user["id"])
-        return jsonify({"token": token, "email": user["email"]})
+        response = jsonify({"message": "Logged in", "email": user["email"]})
+        response.set_cookie(
+            "token",
+            token,
+            httponly=True, 
+            secure=False,
+            samesite="Lax",
+            max_age=JWT_EXP_DELTA_SECONDS,
+        )
+        return response
+
     return jsonify({"error": "Invalid credentials"}), 401
 
 
+# Allows the retrieval of the user's email
 @app.route("/api/user", methods=["GET"])
 def get_user():
-    auth_header = request.headers.get("Authorization", None)
-    if not auth_header:
-        return jsonify({"error": "No token"}), 401
-
-    token = auth_header.split(" ")[1]
-    user_id = verify_token(token)
-    if not user_id:
-        return jsonify({"error": "Invalid or expired token"}), 401
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
 
     db = get_db()
     user = db.execute("SELECT email FROM users WHERE id = ?", (user_id,)).fetchone()
     return jsonify({"email": user["email"]}) if user else ("", 404)
 
 
+# Allows the user to log out
 @app.route("/api/logout", methods=["POST"])
 def logout():
     session.clear()
-    return jsonify({"message": "Logged out"}), 200
+    response = jsonify({"message": "Logged out"})
+    response.set_cookie("token", "", expires=0)
+    return response
 
 
+# Start the flask app and put it on port 5050
 if __name__ == "__main__":
     init_db()
     app.run(debug=True, port=5050)
