@@ -4,8 +4,8 @@ import { createContext, useState, useEffect, useContext } from 'react';
 const AuthContext = createContext({
   user: null,
   loading: true,
-  signIn: async (email, password) => {},
-  signOut: async () => {},
+  signIn: async (email, password) => { },
+  signOut: async () => { },
 });
 
 // An Authentication Provider component that wraps the entire project
@@ -19,17 +19,19 @@ export const AuthProvider = ({ children }) => {
   const fetchUser = async () => {
     try {
       const res = await fetch('http://localhost:5050/api/user', {
-        credentials: 'include', 
+        credentials: 'include',
       });
 
       if (res.ok) {
         const data = await res.json();
         setUser(data);
-      } else {
+      } else if (res.status === 401) {
         setUser(null);
+      } else {
+        console.warn('Unexpected error fetching user:', res.status);
       }
     } catch (err) {
-      console.error('Error fetching user:', err);
+      console.error('Network error fetching user:', err);
       setUser(null);
     } finally {
       setLoading(false);
@@ -76,4 +78,3 @@ export const AuthProvider = ({ children }) => {
 export default function useAuth() {
   return useContext(AuthContext);
 }
-

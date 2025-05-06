@@ -1,5 +1,6 @@
 import datetime
 import sqlite3
+from datetime import datetime, timedelta, timezone
 
 import jwt
 from flask import Flask, jsonify, request, session
@@ -24,8 +25,7 @@ def get_db():
 def create_token(user_id):
     payload = {
         "user_id": user_id,
-        "exp": datetime.datetime.utcnow()
-        + datetime.timedelta(seconds=JWT_EXP_DELTA_SECONDS),
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=JWT_EXP_DELTA_SECONDS),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
@@ -158,7 +158,7 @@ def login():
         response.set_cookie(
             "token",
             token,
-            httponly=True, 
+            httponly=True,
             secure=False,
             samesite="Lax",
             max_age=JWT_EXP_DELTA_SECONDS,
@@ -189,7 +189,51 @@ def logout():
     return response
 
 
+# API route to get user settings
+@app.route("/api/settings", methods=["GET"])
+def get_settings():
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
+
+    db = get_db()
+    settings = db.execute(
+        """
+        SELECT dark_mode, username FROM user_settings WHERE user_id = ?
+        """,
+        (user_id,),
+    ).fetchone()
+
+    if settings:
+        return jsonify(dict(settings))
+    return jsonify({"error": "Settings not found"}), 404
+
+
+# API route to update user settings
+@app.route("/api/settings", methods=["POST"])
+def update_settings():
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
+
+    data = request.get_json()
+    dark_mode = data.get("dark_mode")
+    username = data.get("username")
+
+    db = get_db()
+    db.execute(
+        """
+        UPDATE user_settings
+        SET dark_mode = ?, username = ?
+        WHERE user_id = ?
+        """,
+        (int(dark_mode), username, user_id),
+    )
+    db.commit()
+
+    return jsonify({"message": "Settings updated"})
+
+
 # Start the flask app and put it on port 5050
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5050)

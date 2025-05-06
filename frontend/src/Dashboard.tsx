@@ -1,27 +1,12 @@
 import { useNavigate } from 'react-router';
-import { Button } from './components/ui/button';
 import useAuth from './hooks/auth';
+import MainLayout from './components/layouts/MainLayout';
 
 function Dashboard() {
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
-
-  const handleLogout = async () => {
-    await signOut();
-    navigate('/');
-  };
 
   return (
-    <div className="bg-red-500 p-2">
-      <h1>Dashboard</h1>
-      <Button
-        onClick={() => {
-          handleLogout();
-        }}
-      >
-        Logout
-      </Button>
-    </div>
+    <MainLayout>
+    </MainLayout>
   );
 }
 
