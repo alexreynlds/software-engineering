@@ -234,6 +234,82 @@ def update_settings():
     return jsonify({"message": "Settings updated"})
 
 
+# API route to add an image to favourites
+@app.route("/api/favourites", methods=["POST"])
+def add_favourite():
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
+
+    try:
+        data = request.get_json()
+        image_id = data.get("imageId")
+        if not image_id:
+            return jsonify({"error": "No image ID provided"}), 400
+
+        db = get_db()
+        exists = db.execute(
+            "SELECT 1 FROM favourites WHERE user_id = ? AND image_id = ?",
+            (user_id, image_id),
+        ).fetchone()
+
+        if exists:
+            return jsonify({"error": "Already favourited"}), 409
+
+        db.execute(
+            "INSERT INTO favourites (user_id, image_id) VALUES (?, ?)",
+            (user_id, image_id),
+        )
+        db.commit()
+        return jsonify({"message": "Favourite added"}), 201
+
+    except Exception as e:
+        print("Error in /api/favourites [POST]:", e)
+        return jsonify({"error": "Internal server error"}), 500
+
+
+# API route to remove a favourite from a users account
+@app.route("/api/favourites", methods=["DELETE"])
+def remove_favourite():
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
+
+    try:
+        data = request.get_json()
+        image_id = data.get("imageId")
+        if not image_id:
+            return jsonify({"error": "No image ID provided"}), 400
+
+        db = get_db()
+        db.execute(
+            "DELETE FROM favourites WHERE user_id = ? AND image_id = ?",
+            (user_id, image_id),
+        )
+        db.commit()
+
+        return jsonify({"message": "Favourite removed"}), 200
+
+    except Exception as e:
+        print("Error in /api/favourites [DELETE]:", e)
+        return jsonify({"error": "Internal server error"}), 500
+
+
+# API route to get all favourites for a given user
+@app.route("/api/favourites", methods=["GET"])
+def get_favourites():
+    user_id, error_response, status = check_authentication()
+    if error_response:
+        return error_response, status
+
+    db = get_db()
+    favourites = db.execute(
+        "SELECT image_id FROM favourites WHERE user_id = ?", (user_id,)
+    ).fetchall()
+
+    return jsonify([dict(fav) for fav in favourites]), 200
+
+
 # Start the flask app and put it on port 5050
 if __name__ == "__main__":
     app.run(debug=True, port=5050)
