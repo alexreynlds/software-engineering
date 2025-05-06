@@ -1,13 +1,16 @@
 {
-  "name": "Basic Web Application",
-  "image": "mcr.microsoft.com/devcontainers/python:3.10",
+  "name": "Alex Software Engineering Web Application",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "frontend",
+
+  // "image": "mcr.microsoft.com/devcontainers/python:3.10",
   // "settings": {
   //   "terminal.integrated.shell.linux": "/bin/bash"
   // },
   // "dockerComposeFile": "docker-compose.yml",
   // "service": "app",
-  // "workspaceFolder": "/workspace",
-  "forwardPorts": [5000, 5173],
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [5050, 5173],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -24,5 +27,5 @@
     }
   },
   // "postCreateCommand": "pip install -r requirements.txt && cd frontend && npm install",
-  "remoteUser": "vscode"
+  // "remoteUser": "vscode"
 }
