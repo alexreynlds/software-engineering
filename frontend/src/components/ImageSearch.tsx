@@ -242,6 +242,14 @@ export default function ImageSearch() {
     document.body.removeChild(link);
   };
 
+  const resetFilters = () => {
+    setSelectedLicenses([]);
+    setSelectedExtensions([]);
+    setSelectedCategories([]);
+    setSelectedSizes([]);
+    setSelectedAspectRatios([]);
+  };
+
   const renderImageCard = (item) => {
     const isFavourited = favourites.some((f) => f.image_id === item.id);
 
@@ -455,6 +463,15 @@ export default function ImageSearch() {
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="mt-4 flex justify-start">
+              <Button
+                type="button"
+                onClick={resetFilters}
+                className="bg-red-500 text-white hover:bg-red-600"
+              >
+                Reset Filters
+              </Button>
             </div>
           </div>
         )}
