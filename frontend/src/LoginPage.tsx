@@ -2,8 +2,8 @@ import './index.css';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Label } from './components/ui/label';
-import { useState } from 'react';
-import  useAuth  from './hooks/auth';
+import { useState, useEffect } from 'react';
+import useAuth from './hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -12,8 +12,14 @@ import { toast } from 'sonner';
 // It is where the user is sent by default unless they have the JWT token
 function LoginPage() {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, user, loading } = useAuth();
   const [loginPage, setLoginPage] = useState(true);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard'); // or whatever your dashboard route is
+    }
+  }, [user, loading, navigate]);
 
   // Set the state for login information
   const [loginInfo, setLoginInfo] = useState({
@@ -55,7 +61,7 @@ function LoginPage() {
     const { email, password } = loginInfo;
 
     try {
-      await signIn(email, password); 
+      await signIn(email, password);
       navigate('/dashboard');
     } catch (error) {
       toast.error('Login failed: ' + error.message);
@@ -188,4 +194,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
