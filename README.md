@@ -29,21 +29,11 @@ if you have tree installed it should return:
 └── README.md
 ```
 
-
-## 3. Build the containers
+## 3. Build the containers and run the containers
 From this directory, type:
 
 ```
-docker-compose build --no-cache
-```
-
-Which should build the two containers
-
-## 4. Launch the containers
-After building has completed you can run the containers by typing:
-
-```
-docker-compose up
+docker-compose up --build
 ```
 
 ## 5. Open frontend
