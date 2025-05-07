@@ -108,7 +108,6 @@ function LoginPage() {
           className="flex h-[60%] min-w-[500px] flex-col items-center justify-between rounded-lg border-2 border-[#272727] bg-[#1e1e1e] p-8 shadow-lg"
         >
           <h1 className="text-2xl font-bold underline">LOG IN</h1>
-          <p>{API_BASE}</p>
           <div className="flex w-full flex-col gap-4">
             <Label htmlFor="email" className="text-sm font-medium">
               Email
