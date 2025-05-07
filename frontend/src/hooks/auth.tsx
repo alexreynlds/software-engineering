@@ -1,11 +1,13 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { toast } from 'sonner';
+
+const API_BASE = import.meta.env.VITE_API_URL;
 
 // This is the context for authentication
 const AuthContext = createContext({
   user: null,
   loading: true,
-  signIn: async (email, password) => { },
+  signIn: async (email: string, password: string) => { },
   signOut: async () => { },
 });
 
@@ -13,13 +15,13 @@ const AuthContext = createContext({
 // and provides the authentication context to all components
 //
 // This allows users to login and logout
-export const AuthProvider = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     try {
-      const res = await fetch('http://localhost:5050/api/user', {
+      const res = await fetch(`${API_BASE}/api/user`, {
         credentials: 'include',
       });
 
@@ -43,12 +45,12 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const signIn = async (email, password) => {
-    const res = await fetch('http://localhost:5050/api/login', {
+  const signIn = async (email: string, password: string) => {
+    const res = await fetch(`${API_BASE}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({email, password}),
     });
 
     if (!res.ok) {
@@ -61,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = async () => {
-    await fetch('http://localhost:5050/api/logout', {
+    await fetch(`${API_BASE}/api/logout`, {
       method: 'POST',
       credentials: 'include',
     });

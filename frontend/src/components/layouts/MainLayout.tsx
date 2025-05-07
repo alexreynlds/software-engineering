@@ -23,6 +23,8 @@ interface Props {
   children: ReactNode;
 }
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 // The main layout component that wraps the main content of the application
 function MainLayout({ children }: Props) {
   const { user, signOut } = useAuth();
@@ -34,7 +36,7 @@ function MainLayout({ children }: Props) {
   // Fetch the user's settings (dark mode and username) when the component mounts
   useEffect(() => {
     const fetchSettings = async () => {
-      const res = await fetch('http://localhost:5050/api/settings', {
+      const res = await fetch(`${API_BASE}/api/settings`, {
         credentials: 'include',
       });
 
@@ -65,7 +67,7 @@ function MainLayout({ children }: Props) {
 
   // Function to save the settings
   const saveSettings = async () => {
-    const res = await fetch('http://localhost:5050/api/settings', {
+    const res = await fetch(`${API_BASE}/api/settings`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +78,7 @@ function MainLayout({ children }: Props) {
 
     if (res.ok) {
       toast.success('Settings saved successfully!');
-      const refetch = await fetch('http://localhost:5050/api/settings', {
+      const refetch = await fetch(`${API_BASE}/api/settings`, {
         credentials: 'include',
       });
       if (refetch.ok) {
@@ -90,7 +92,7 @@ function MainLayout({ children }: Props) {
   };
 
   const deleteAccount = async () => {
-    const res = await fetch('http://localhost:5050/api/register', {
+    const res = await fetch(`${API_BASE}/api/register`, {
       method: 'DELETE',
       credentials: 'include',
     });

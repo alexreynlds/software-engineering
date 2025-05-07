@@ -69,9 +69,11 @@ export default function ImageSearch() {
     [],
   );
 
+  const API_BASE = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchFavourites = async () => {
-      const res = await fetch('http://localhost:5050/api/favourites', {
+      const res = await fetch(`${API_BASE}/api/favourites`, {
         credentials: 'include',
       });
 
@@ -192,7 +194,7 @@ export default function ImageSearch() {
     const isFavourited = favourites.some((f) => f.image_id === item.id);
     const method = isFavourited ? 'DELETE' : 'POST';
 
-    const res = await fetch('http://localhost:5050/api/favourites', {
+    const res = await fetch(`${API_BASE}/api/favourites`, {
       method,
       credentials: 'include',
       headers: {
@@ -206,7 +208,7 @@ export default function ImageSearch() {
         isFavourited ? 'Removed from favourites' : 'Added to favourites',
       );
 
-      const updated = await fetch('http://localhost:5050/api/favourites', {
+      const updated = await fetch(`${API_BASE}/api/favourites`, {
         credentials: 'include',
       });
       const data = await updated.json();

@@ -8,8 +8,8 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
-app.secret_key =  "super-secret-key"
+CORS(app, supports_credentials=True, origins="*")
+app.secret_key = "super-secret-key"
 JWT_SECRET = "super-duper-secret-key"
 JWT_EXP_DELTA_SECONDS = 30 * 24 * 3600  # Currently 30 days
 bcrypt = Bcrypt(app)
@@ -53,7 +53,6 @@ def check_authentication():
 
 
 # Initialize the database and create tables if they dont exist
-@app.before_first_request
 def init_db():
     db = get_db()
 
@@ -313,4 +312,5 @@ def get_favourites():
 
 # Start the flask app and put it on port 5050
 if __name__ == "__main__":
-    app.run(debug=True, port=5050)
+    init_db()
+    app.run(debug=True, host="0.0.0.0", port=5050)

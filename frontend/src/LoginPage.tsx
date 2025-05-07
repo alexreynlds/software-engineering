@@ -7,6 +7,9 @@ import useAuth from './hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
+const API_BASE = import.meta.env.VITE_API_URL;
+console.log('API_BASE:', API_BASE);
+
 // This is the login page component
 //
 // It is where the user is sent by default unless they have the JWT token
@@ -36,7 +39,7 @@ function LoginPage() {
 
   // Handle the change in the input fields for login and register
   // setting the login info to the values of the input fields
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginInfo((prev) => ({
       ...prev,
@@ -44,7 +47,7 @@ function LoginPage() {
     }));
   };
 
-  const handleRegisterChange = (e) => {
+  const handleRegisterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setRegisterInfo((prev) => ({
       ...prev,
@@ -56,7 +59,7 @@ function LoginPage() {
     setLoginPage((prev) => !prev);
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = loginInfo;
 
@@ -64,11 +67,15 @@ function LoginPage() {
       await signIn(email, password);
       navigate('/dashboard');
     } catch (error) {
-      toast.error('Login failed: ' + error.message);
+      if (error instanceof Error) {
+        toast.error('Login failed: ' + error.message);
+      } else {
+        toast.error('Login failed');
+      }
     }
   };
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password, password1 } = registerInfo;
 
@@ -77,7 +84,7 @@ function LoginPage() {
       return;
     }
 
-    const res = await fetch('http://localhost:5050/api/register', {
+    const res = await fetch(`${API_BASE}/api/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -101,6 +108,7 @@ function LoginPage() {
           className="flex h-[60%] min-w-[500px] flex-col items-center justify-between rounded-lg border-2 border-[#272727] bg-[#1e1e1e] p-8 shadow-lg"
         >
           <h1 className="text-2xl font-bold underline">LOG IN</h1>
+          <p>{API_BASE}</p>
           <div className="flex w-full flex-col gap-4">
             <Label htmlFor="email" className="text-sm font-medium">
               Email

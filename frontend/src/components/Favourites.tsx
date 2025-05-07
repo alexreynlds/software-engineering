@@ -4,6 +4,8 @@ import { toast } from 'sonner';
 import { DialogTrigger, Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { FaHeart } from 'react-icons/fa';
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 // A favourites page that shows the users saved Openverse images
 export default function FavouritesPage() {
   const [favourites, setFavourites] = useState([]);
@@ -11,7 +13,7 @@ export default function FavouritesPage() {
 
   useEffect(() => {
     const fetchFavourites = async () => {
-      const res = await fetch('http://localhost:5050/api/favourites', {
+      const res = await fetch(`${API_BASE}/api/favourites`, {
         credentials: 'include',
       });
 
@@ -42,7 +44,7 @@ export default function FavouritesPage() {
   }, []);
 
   const removeFavourite = async (item) => {
-    const res = await fetch('http://localhost:5050/api/favourites', {
+    const res = await fetch(`${API_BASE}/api/favourites`, {
       method: 'DELETE',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
