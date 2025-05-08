@@ -58,7 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       throw new Error(error.error || 'Login failed');
     }
 
-    // After login, cookie is automatically stored
     await fetchUser();
   };
 

@@ -31,7 +31,6 @@ function MainLayout({ children }: Props) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [username, setUsername] = useState('');
-  const token = localStorage.getItem('token');
 
   // Fetch the user's settings (dark mode and username) when the component mounts
   useEffect(() => {
@@ -91,6 +90,7 @@ function MainLayout({ children }: Props) {
     }
   };
 
+  // Function to delete the user's account
   const deleteAccount = async () => {
     const res = await fetch(`${API_BASE}/api/register`, {
       method: 'DELETE',
@@ -109,7 +109,6 @@ function MainLayout({ children }: Props) {
   return (
     <>
       {/* Theme provider to manage dark/light mode */}
-
       <ThemeProvider dark={darkMode} />
       <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-white text-black dark:bg-[#11121E] dark:text-white">
         {/* "Navigation" Bar - its not really a nav bar but y'know */}

@@ -104,21 +104,23 @@ export default function ImageSearch() {
   }, []);
 
   const handleSearch = async (e?, customQuery?: string, pageNumArg?) => {
-    if (showFilters) setShowFilters(false);
     if (e) e.preventDefault();
+    if (showFilters) setShowFilters(false);
 
     const finalQuery = customQuery || query;
     if (!finalQuery) return;
 
     const pageToFetch = pageNumArg ?? (customQuery ? 1 : page);
-    setPage(pageToFetch);
 
     // Update search history
-    setSearchHistory((prev) => {
-      const updated = [finalQuery, ...prev.filter((q) => q !== finalQuery)];
-      return updated.slice(0, 5);
-    });
+    if (!customQuery && !pageNumArg) {
+      setSearchHistory((prev) => {
+        const updated = [finalQuery, ...prev.filter((q) => q !== finalQuery)];
+        return updated.slice(0, 5);
+      });
+    }
 
+    // gget the filters if there are any
     const licenseParam = selectedLicenses.join(',');
     const extensionParam = selectedExtensions.join(',');
     const categoryParam = selectedCategories.join(',');
@@ -142,13 +144,14 @@ export default function ImageSearch() {
       ? `&aspect_ratio=${encodeURIComponent(aspectRatioParam)}`
       : '';
 
+    // Create the full query string and await the results
     const res = await fetch(
       `https://api.openverse.org/v1/images/?q=${finalQuery}&page_size=10&page=${pageToFetch}${licenseQuery}${categoryQuery}${extensionQuery}${sizeQuery}${aspectRatioQuery}`,
     );
 
     const data = await res.json();
     setSearchResults(Array.isArray(data.results) ? data.results : []);
-    setPage(1);
+    setPage(pageToFetch);
     setTotalPages(data.page_count || 1);
     setIsFocused(false);
     inputRef.current.blur();
@@ -375,6 +378,7 @@ export default function ImageSearch() {
             SEARCH
           </Button>
         </form>
+        {/* Filters */}
         {showFilters && (
           <div className="absolute z-20 mb-4 w-auto translate-y-[15%] rounded border bg-white p-4 shadow dark:bg-[#1E2938]">
             <div className="flex flex-row items-start gap-12">
@@ -489,7 +493,7 @@ export default function ImageSearch() {
           )}
         </div>
 
-        {/* Pagination (only for search) */}
+        {/* pagnation */}
         {searchResults.length > 0 && (
           <div className="mt-6 flex items-center justify-center gap-4">
             <Button

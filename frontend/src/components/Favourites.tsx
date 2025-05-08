@@ -60,6 +60,7 @@ export default function FavouritesPage() {
     }
   };
 
+  // Should probably get around to making this a component at somepoint
   const renderImageCard = (item) => (
     <div key={item.id} className="relative">
       <Dialog>
